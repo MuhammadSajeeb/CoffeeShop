@@ -61,8 +61,13 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-5">
-                    <asp:GridView ID="ItemSalesGridView" runat="server" EmptyDataText="No Order Available Here" Width="100%" CssClass="table table-striped table-bordered table-hover" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="10" ForeColor="Black" GridLines="Horizontal" AllowPaging="True" PageSize="2" CellSpacing="10" OnPageIndexChanging="ItemSalesGridView_PageIndexChanging" OnSelectedIndexChanged="ItemSalesGridView_SelectedIndexChanged">
+                    <asp:GridView ID="ItemSalesGridView" runat="server" EmptyDataText="No Order Available Here" Width="100%" CssClass="table table-striped table-bordered table-hover" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="10" ForeColor="Black" GridLines="Horizontal" AllowPaging="True" CellSpacing="10" OnPageIndexChanging="ItemSalesGridView_PageIndexChanging" OnSelectedIndexChanged="ItemSalesGridView_SelectedIndexChanged" OnRowCommand="ItemSalesGridView_RowCommand">
                         <Columns>
+                            <asp:TemplateField>
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnDelete" CommandArgument='<%# Eval("Id") %>' CommandName="DeleteRow" ForeColor="#8C4510" runat="server" CausesValidation="false">Delete</asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                             <asp:BoundField DataField="Id" HeaderText="Id" Visible="false" />
                             <asp:BoundField DataField="Name" HeaderText="Name" />
                             <asp:BoundField DataField="Qty" HeaderText="Qty" />

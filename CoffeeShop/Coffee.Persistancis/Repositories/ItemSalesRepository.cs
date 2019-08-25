@@ -98,9 +98,9 @@ namespace Coffee.Persistancis.Repositories
             string query = "Update ItemSales SET Qty='" + _ItemSales.Qty + "',Sub_Price='" + _ItemSales.Sub_Price + "' where Id='" + _ItemSales.Id + "' ";
             return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
         }
-        public int Delete(ItemSales _ItemSales)
+        public int Delete(int id)
         {
-            string query = ("Delete From ItemSales Where Id='" + _ItemSales.Id + "' ");
+            string query = ("Delete From ItemSales Where Id='" + id + "' ");
             return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
         }
         public List<ItemSales> GetAllSaleItems(string serial)
