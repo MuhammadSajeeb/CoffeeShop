@@ -22,6 +22,8 @@ namespace CoffeeShop.Item
                 ItemsDropDownList.Items.Insert(0, new ListItem("Select Items", "0"));
                 UpdateButton.Visible = false;
                 DeleteButton.Visible = false;
+                txtDiscount.Text = "0";
+                txtCashierName.Text = "Mr.Sajib";
             }
         }
         public void AutoCodeGenerate()
@@ -95,6 +97,10 @@ namespace CoffeeShop.Item
                 {
                     LoadSaleItems();
                     GridviewRowSum();
+                    ItemsDropDownList.ClearSelection();
+                    txtQty.Text = "";
+                    txtItemPrice.Text = "";
+                    txtSubTotal.Text = "";
                 }
                 else
                 {
@@ -127,7 +133,7 @@ namespace CoffeeShop.Item
                 ItemsDropDownList.DataValueField = "Id";
                 ItemsDropDownList.DataBind();
                 ItemsDropDownList.Items.Insert(0, new ListItem("Select Items", "0"));
-
+                txtItemPrice.Text = "";
             }
             catch
             {
@@ -144,6 +150,7 @@ namespace CoffeeShop.Item
                 if (getPrice != null)
                 {
                     txtItemPrice.Text = Convert.ToDecimal(getPrice.Price).ToString();
+                    txtQty.Focus();
                 }
             }
             catch
@@ -185,6 +192,35 @@ namespace CoffeeShop.Item
 
             decimal changes = PaidAmount - totalcost;
             lblChanges.Text = Convert.ToDecimal(changes).ToString();
+        }
+
+        protected void PrintButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AccountSales _AccountSales = new AccountSales();
+                _AccountSales.Serial = txtSerial.Text;
+                _AccountSales.CashierName = txtCashierName.Text;
+                _AccountSales.CustomerName = txtCustomerName.Text;
+                _AccountSales.GrandTotal = Convert.ToDecimal(txtTotalCost.Text);
+                _AccountSales.Discount = Convert.ToDecimal(txtDiscount.Text);
+                _AccountSales.PaidAmount = Convert.ToDecimal(txtPaidAmount.Text);
+                _AccountSales.ChangesAmount = Convert.ToDecimal(lblChanges.Text);
+
+                int savesuccess = _ItemSalesRepository.AddAccountSale(_AccountSales);
+                if(savesuccess>0)
+                {
+                    AutoCodeGenerate();
+                }
+                else
+                {
+
+                }
+            }
+            catch(Exception ex)
+            {
+                lblSerial.Text = ex.Message;
+            }
         }
     }
 }

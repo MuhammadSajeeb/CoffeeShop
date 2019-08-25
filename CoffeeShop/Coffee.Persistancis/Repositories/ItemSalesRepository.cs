@@ -133,7 +133,7 @@ namespace Coffee.Persistancis.Repositories
         }
         public int AddAccountSale(AccountSales _AccountSales)
         {
-            string query = "Insert Into ItemSales(Serial,CashierName,CustomerName,GrandTotal,Discount,PaidAmount,ChangesAmount,Date) Values ('" + _AccountSales.Serial + "','" + _AccountSales.CashierName + "','" + _AccountSales.CustomerName + "','" + _AccountSales.GrandTotal + "','" + _AccountSales.Discount + "','"+ _AccountSales.PaidAmount+ "','"+ _AccountSales.ChangesAmount+ "','" + DateTime.Now.ToShortDateString() + "')";
+            string query = "Insert Into AccountSales(Serial,CashierName,CustomerName,GrandTotal,Discount,PaidAmount,ChangesAmount,Date) Values ('" + _AccountSales.Serial + "','" + _AccountSales.CashierName + "','" + _AccountSales.CustomerName + "','" + _AccountSales.GrandTotal + "','" + _AccountSales.Discount + "','"+ _AccountSales.PaidAmount+ "','"+ _AccountSales.ChangesAmount+ "','" + DateTime.Now.ToShortDateString() + "')";
             return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
         }
     }
