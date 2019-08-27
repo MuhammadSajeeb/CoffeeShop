@@ -126,6 +126,28 @@ namespace Coffee.Persistancis.Repositories
 
             return _ItemSalesList;
         }
+        public List<ItemSales> GetAllReport(string serial)
+        {
+            var _ItemSalesList = new List<ItemSales>();
+            string query = ("Select *from ItemSales where Serial='" + serial + "' And Date='" + DateTime.Now.ToShortDateString() + "' ");
+            var reader = _MainRepository.Reader(query, _MainRepository.ConnectionString());
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    var _ItemSales = new ItemSales();
+                    _ItemSales.Name = reader["Name"].ToString();
+                    _ItemSales.Qty = Convert.ToInt32(reader["Qty"].ToString());
+                    _ItemSales.Per_Price = Convert.ToDecimal(reader["Per_Price"].ToString());
+                    _ItemSales.Sub_Price = Convert.ToDecimal(reader["Sub_Price"].ToString());
+
+                    _ItemSalesList.Add(_ItemSales);
+                }
+            }
+            reader.Close();
+
+            return _ItemSalesList;
+        }
         public decimal SumOrdere(string serial)
         {
             string query = "select SUM(Sub_Price) From ItemSales where Serial='" + serial + "' and Date='" + DateTime.Now.ToShortDateString() + "'";

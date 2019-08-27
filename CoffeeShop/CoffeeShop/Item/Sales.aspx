@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Sales.aspx.cs" Inherits="CoffeeShop.Item.Sales" %>
 
+<%@ Register Assembly="Microsoft.ReportViewer.WebForms" Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="form-horizontal">
         <div class="form-horizontal">
@@ -108,6 +110,18 @@
                 </div>
             </div>
         </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-5">
+                    <asp:GridView ID="ReportGridView" runat="server" EmptyDataText="No Order Available Here" Width="100%" CssClass="table table-striped table-bordered table-hover" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="10" ForeColor="Black" GridLines="Horizontal" AllowPaging="True" CellSpacing="10" Visible="false">
+                        <Columns>
+                            <asp:BoundField DataField="Name" HeaderText="Name" />
+                            <asp:BoundField DataField="Qty" HeaderText="Qty" />
+                            <asp:BoundField DataField="Per_Price" HeaderText="Price" />
+                            <asp:BoundField DataField="Sub_price" HeaderText="Total" />
+                        </Columns>
+                    </asp:GridView>
+                </div>
+             </div>
         <link href="../Content/Gridviewstylesheet.css" rel="stylesheet" />
     </div>
 </asp:Content>
