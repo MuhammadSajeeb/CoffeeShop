@@ -12,18 +12,20 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.html.simpleparser;
 using System.IO;
 using System.Text;
+using System.Data.SqlClient;
 using iTextSharp.text.pdf.draw;
 
 namespace CoffeeShop.Item
 {
     public partial class Sales : System.Web.UI.Page
     {
+        DataTable dataTable = new DataTable();
         ItemSalesRepository _ItemSalesRepository = new ItemSalesRepository();
+        MainRepository _MainRepository = new MainRepository();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                LoadSaleItems();
                 AutoCodeGenerate();
                 GetALLCategories();
                 ItemsDropDownList.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Select Items", "0"));
@@ -64,27 +66,72 @@ namespace CoffeeShop.Item
         }
         public void LoadSaleItems()
         {
-            string serial;
-            serial = txtSerial.Text;
+            //string serial;
+            //serial = txtSerial.Text;
 
-            ItemSalesGridView.DataSource = _ItemSalesRepository.GetAllSaleItems(serial);
-            ItemSalesGridView.DataBind();
+            //ItemSalesGridView.DataSource = _ItemSalesRepository.GetAllSaleItems(serial);
+            //ItemSalesGridView.DataBind();
+
+            dataTable.Columns.Add("Name", typeof(string));
+            dataTable.Columns.Add("Qty", typeof(int));
+            dataTable.Columns.Add("Perprice", typeof(decimal));
+            dataTable.Columns.Add("Subprice", typeof(decimal));
+            DataRow dr = null;
+            if (ViewState["Details"] != null)
+            {
+                for (int i = 0; i < 1; i++)
+                {
+                    dataTable = (DataTable)ViewState["Details"];
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        dr = dataTable.NewRow();
+                        dr["Name"] = ItemsDropDownList.SelectedItem.ToString();
+                        dr["Qty"] = txtQty.Text;
+                        dr["Perprice"] = txtItemPrice.Text;
+                        dr["Subprice"] = txtSubPrice.Text;
+                        dataTable.Rows.Add(dr);
+
+                        ItemSalesGridView.DataSource = dataTable;
+                        ItemSalesGridView.DataBind();
+                    }
+                }
+            }
+            else
+            {
+                dr = dataTable.NewRow();
+                dr["Name"] = ItemsDropDownList.SelectedItem.ToString();
+                dr["Qty"] = txtQty.Text;
+                dr["Perprice"] = txtItemPrice.Text;
+                dr["Subprice"] = txtSubPrice.Text;
+                dataTable.Rows.Add(dr);
+
+                ItemSalesGridView.DataSource = dataTable;
+                ItemSalesGridView.DataBind();
+            }
+            ViewState["Details"] = dataTable;
+
         }
         public void LoadReport()
         {
-            string serial;
-            serial = txtSerial.Text;
-
-            ReportGridView.DataSource = _ItemSalesRepository.GetAllReport(serial);
+            ReportGridView.DataSource = dataTable;
             ReportGridView.DataBind();
         }
         public void GridviewRowSum()
         {
-            string serial;
-            serial = txtSerial.Text;
+            //string serial;
+            //serial = txtSerial.Text;
 
-            decimal Total = _ItemSalesRepository.SumOrdere(serial);
-            txtSubTotal.Text = Convert.ToDecimal(Total).ToString();
+            //decimal Total = _ItemSalesRepository.SumOrdere(serial);
+            //txtSubTotal.Text = Convert.ToDecimal(Total).ToString();
+
+            decimal SubTotal = 0;
+            foreach (GridViewRow row in ItemSalesGridView.Rows)
+            {
+
+                SubTotal = SubTotal + Convert.ToDecimal(row.Cells[4].Text); //Where Cells is the column. Just changed the index of cells
+            }
+            txtSubTotal.Text = SubTotal.ToString();
+
         }
         public void DiscountCalculation()
         {
@@ -95,39 +142,14 @@ namespace CoffeeShop.Item
             decimal discountAmount = cal * subtotal;
             decimal Costamount = subtotal - discountAmount;
             txtTotalCost.Text = Convert.ToInt32(Costamount).ToString();
-
         }
         protected void AddButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                ItemSales _ItemSales = new ItemSales();
-                _ItemSales.Name = ItemsDropDownList.SelectedItem.ToString();
-                _ItemSales.Qty = Convert.ToInt32(txtQty.Text);
-                _ItemSales.Per_Price = Convert.ToDecimal(txtItemPrice.Text);
-                _ItemSales.Sub_Price = Convert.ToDecimal(txtSubPrice.Text);
-                _ItemSales.Serial = txtSerial.Text;
 
-                int successAdd = _ItemSalesRepository.Add(_ItemSales);
-                if (successAdd > 0)
-                {
-                    LoadSaleItems();
-                    LoadReport();
-                    GridviewRowSum();
-                    ItemsDropDownList.ClearSelection();
-                    txtQty.Text = "";
-                    txtItemPrice.Text = "";
-                    txtSubPrice.Text = "";
-                }
-                else
-                {
+            LoadSaleItems();
+            LoadReport();
+            GridviewRowSum();
 
-                }
-            }
-            catch
-            {
-
-            }
         }
 
         protected void UpdateButton_Click(object sender, EventArgs e)
@@ -309,8 +331,8 @@ namespace CoffeeShop.Item
 
 
             cell = new PdfPCell(new Phrase("Grand Total : "+txtSubTotal.Text+" ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 8, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
             cell.BorderWidth = 0f;
             //cell.BorderColor = BaseColor.LIGHT_GRAY;
             //cell.FixedHeight = 20f;
@@ -401,9 +423,21 @@ namespace CoffeeShop.Item
         }
 
         protected void PrintButton_Click(object sender, EventArgs e)
-        {
+        { 
             try
             {
+                foreach (GridViewRow gr in ItemSalesGridView.Rows)
+                {
+                    ItemSales _ItemSales = new ItemSales();
+                    _ItemSales.Name = (gr.Cells[1].Text);
+                    _ItemSales.Qty=Convert.ToInt32(gr.Cells[2].Text);
+                    _ItemSales.Per_Price = Convert.ToDecimal(gr.Cells[3].Text);
+                    _ItemSales.Sub_Price = Convert.ToDecimal(gr.Cells[4].Text);
+                    _ItemSales.Serial = txtSerial.Text;
+
+                    int savesuccess = _ItemSalesRepository.Add(_ItemSales);
+                }
+
                 AccountSales _AccountSales = new AccountSales();
                 _AccountSales.Serial = txtSerial.Text;
                 _AccountSales.CashierName = txtCashierName.Text;
@@ -413,44 +447,59 @@ namespace CoffeeShop.Item
                 _AccountSales.PaidAmount = Convert.ToDecimal(txtPaidAmount.Text);
                 _AccountSales.ChangesAmount = Convert.ToDecimal(lblChanges.Text);
 
-                int savesuccess = _ItemSalesRepository.AddAccountSale(_AccountSales);
-                if(savesuccess>0)
+                int savesuccess1 = _ItemSalesRepository.AddAccountSale(_AccountSales);
+                if (savesuccess1 > 0)
                 {
-                    AutoCodeGenerate();
+                    //AutoCodeGenerate();
+                    Response.Redirect(Request.Url.AbsoluteUri);
                 }
                 else
                 {
 
                 }
             }
-            catch(Exception ex)
-            {
-                lblSerial.Text = ex.Message;
-            }
+            catch
+            {}
         }
 
         protected void ItemSalesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            try
+            //try
+            //{
+
+            //    int successdelete = _ItemSalesRepository.Delete(Convert.ToInt32(e.CommandArgument));
+            //    if(successdelete>0)
+            //    {
+            //        lblCashierName.Text = "delete";
+            //        LoadSaleItems();
+            //        LoadReport();
+            //        GridviewRowSum();
+            //    }
+            //    else
+            //    {
+
+            //    }
+            //}
+            //catch(Exception ex)
+            //{
+
+            //}
+        }
+        protected void ItemSalesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            dataTable = (DataTable)ViewState["Details"];
+            if (dataTable.Rows.Count > 0)
             {
+                dataTable.Rows[e.RowIndex].Delete();
+                ItemSalesGridView.DataSource = dataTable;
+                ItemSalesGridView.DataBind();
 
-                int successdelete = _ItemSalesRepository.Delete(Convert.ToInt32(e.CommandArgument));
-                if(successdelete>0)
-                {
-                    lblCashierName.Text = "delete";
-                    LoadSaleItems();
-                    LoadReport();
-                    GridviewRowSum();
-                }
-                else
-                {
-
-                }
+                ReportGridView.DataSource = dataTable;
+                ReportGridView.DataBind();
             }
-            catch(Exception ex)
-            {
+            ViewState["Details"] = dataTable;
+            GridviewRowSum();
 
-            }
         }
         private static Phrase FormatPhrase(string value)
         {
@@ -468,5 +517,7 @@ namespace CoffeeShop.Item
         {
             return new Phrase(value, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 11, iTextSharp.text.Font.BOLD));
         }
+
+
     }
 }

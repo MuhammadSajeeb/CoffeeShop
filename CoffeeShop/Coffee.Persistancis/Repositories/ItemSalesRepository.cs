@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Data.SqlClient;
 namespace Coffee.Persistancis.Repositories
 {
     public class ItemSalesRepository
@@ -93,6 +93,11 @@ namespace Coffee.Persistancis.Repositories
             string query = "Insert Into ItemSales(Name,Qty,Per_Price,Sub_Price,Serial,Date) Values ('" + _ItemSales.Name + "','" + _ItemSales.Qty + "','" + _ItemSales.Per_Price + "','" + _ItemSales.Sub_Price + "','" + _ItemSales.Serial + "','" + DateTime.Now.ToShortDateString() + "')";
             return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
         }
+        public int Addtran()
+        {
+            string query = "Insert Into ItemSales(Name,Qty,Per_Price,Sub_Price,Serial,Date) Values ('Sajib',2,100,200,1,'2019-08-28')";
+            return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
+        }
         public int Update(ItemSales _ItemSales)
         {
             string query = "Update ItemSales SET Qty='" + _ItemSales.Qty + "',Sub_Price='" + _ItemSales.Sub_Price + "' where Id='" + _ItemSales.Id + "' ";
@@ -158,5 +163,11 @@ namespace Coffee.Persistancis.Repositories
             string query = "Insert Into AccountSales(Serial,CashierName,CustomerName,GrandTotal,Discount,PaidAmount,ChangesAmount,Date) Values ('" + _AccountSales.Serial + "','" + _AccountSales.CashierName + "','" + _AccountSales.CustomerName + "','" + _AccountSales.GrandTotal + "','" + _AccountSales.Discount + "','"+ _AccountSales.PaidAmount+ "','"+ _AccountSales.ChangesAmount+ "','" + DateTime.Now.ToShortDateString() + "')";
             return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
         }
+        public int AddAccountSaletran()
+        {
+            string query = "Insert Into AccountSales(Serial,CashierName,CustomerName,GrandTotal,Discount,PaidAmount,ChangesAmount,Date) Values ('1','ratul','Sajib',2000,5,2000,80,'2019/08/28')";
+            return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
+        }
+        
     }
 }
