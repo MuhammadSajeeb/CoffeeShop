@@ -29,8 +29,6 @@ namespace CoffeeShop.Item
                 AutoCodeGenerate();
                 GetALLCategories();
                 ItemsDropDownList.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Select Items", "0"));
-                UpdateButton.Visible = true;
-                DeleteButton.Visible = true;
                 txtDiscount.Text = "0";
                 txtCashierName.Text = "Mr.Sajib";
                 txtDate.Text = DateTime.Now.ToString("MMMM dd,yyyy"+" " + "HH : MM : SS ");
@@ -143,110 +141,14 @@ namespace CoffeeShop.Item
             decimal Costamount = subtotal - discountAmount;
             txtTotalCost.Text = Convert.ToInt32(Costamount).ToString();
         }
-        protected void AddButton_Click(object sender, EventArgs e)
-        {
-
-            LoadSaleItems();
-            LoadReport();
-            GridviewRowSum();
-
-        }
-
-        protected void UpdateButton_Click(object sender, EventArgs e)
-        {
-
-            //Dummy data for Invoice (Bill).
-   
-            DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[4] {
-                            new DataColumn("Product", typeof(string)),
-                            new DataColumn("Price", typeof(int)),
-                            new DataColumn("Quantity", typeof(int)),
-                            new DataColumn("Total", typeof(int))});
-            dt.Rows.Add(  "Sun Glasses", 200, 5, 1000);
-            dt.Rows.Add(  "Jeans", 400, 2, 800);
-            dt.Rows.Add(  "Trousers", 300, 3, 900);
-            dt.Rows.Add(  "Shirts", 550, 2, 1100);
-
-            using (StringWriter sw = new StringWriter())
-            {
-                using (HtmlTextWriter hw = new HtmlTextWriter(sw))
-                {
-                    StringBuilder sb = new StringBuilder();
-
-                    //Generate Invoice (Bill) Header.
-                    sb.Append("<table width='100%' cellspacing='0' cellpadding='2'>");
-                    sb.Append("<tr><td align='center' style='background-color: #18B5F0' colspan = '2'><b>Sajeeb Coffee House</b></td></tr>");
-                    sb.Append("<tr><td align='center' style='background-color: #18B5F0' colspan = '2'><b>Your Reciept</b></td></tr>");
-                    sb.Append("<tr><td colspan = '2'></td></tr>");
-                    sb.Append("<tr><td><b>Serial No: </b>");
-                    sb.Append(txtSerial.Text);
-                    sb.Append("</td><td align = 'right'><b>Date : </b>");
-                    sb.Append(DateTime.Now.ToString("MMMM dd,yyyy" +" "+ "HH : MM : ss : tt "));
-                    sb.Append(" </td></tr>");
-                    sb.Append("<tr><td colspan = '2'><b>Cashier Name: </b>");
-                    sb.Append(txtCashierName.Text);
-                    sb.Append("</td></tr>");
-                    sb.Append("<tr><td colspan = '2'><b>Customer Name: </b>");
-                    sb.Append(txtCustomerName.Text);
-                    sb.Append("</table>");
-                    sb.Append("<br />");
-
-                    //Generate Invoice (Bill) Items Grid.
-                    sb.Append("<table border = '1'>");
-                    sb.Append("<tr>");
-                    foreach (DataColumn column in dt.Columns)
-                    {
-                        sb.Append("<th style = 'background-color: #D20B0C;color:#ffffff'>");
-                        sb.Append(column.ColumnName);
-                        sb.Append("</th>");
-                    }
-                    sb.Append("</tr>");
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        sb.Append("<tr>");
-                        foreach (DataColumn column in dt.Columns)
-                        {
-                            sb.Append("<td>");
-                            sb.Append(row[column]);
-                            sb.Append("</td>");
-                        }
-                        sb.Append("</tr>");
-                    }
-                    sb.Append("<tr><td align = 'right' colspan = '");
-                    sb.Append(dt.Columns.Count - 1);
-                    sb.Append("'>Total</td>");
-                    sb.Append("<td>");
-                    sb.Append(dt.Compute("sum(Total)", ""));
-                    sb.Append("</td><td align = 'right'><b> Sub total : </b>");
-                    sb.Append("100");
-                    sb.Append("</td></tr>");
-                    sb.Append("</tr></table>");
-
-                    //Export HTML String as PDF.
-                    StringReader sr = new StringReader(sb.ToString());
-                    Document pdfDoc = new Document(PageSize.B7, 10f, 10f, 10f, 0f);
-                    HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
-                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
-                    pdfDoc.Open();
-                    htmlparser.Parse(sr);
-                    pdfDoc.Close();
-                    Response.ContentType = "application/pdf";
-                    Response.AddHeader("content-disposition", "attachment;filename=Invoice_" + txtSerial.Text + ".pdf");
-                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                    Response.Write(pdfDoc);
-                    Response.End();
-                }
-            }
-        }
-
-        protected void DeleteButton_Click(object sender, EventArgs e)
+        public void CreatePdf()
         {
             Response.Clear();
             Response.ContentType = "application/pdf";
-            Response.AddHeader("content-disposition", "attachment; filename='Royal University Of Dhaka'.pdf");
+            Response.AddHeader("content-disposition", "attachment;filename=Invoice_" + txtSerial.Text + "" + s + "" + DateTime.Now.ToString() + ".pdf");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Document document = new Document();
-            document = new Document(PageSize.B7);
+            document = new Document(PageSize.B6);
             MemoryStream ms = new MemoryStream();
             PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
 
@@ -279,33 +181,51 @@ namespace CoffeeShop.Item
             //cell.FixedHeight = 20f;
             dth.AddCell(cell);
 
+            cell = new PdfPCell(new Phrase("Cashier Name : " + txtCashierName.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 0;
+            cell.VerticalAlignment = 0;
+            cell.BorderWidth = 0f;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            dth.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Customer Name : " + txtCustomerName.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 0;
+            cell.VerticalAlignment = 0;
+            cell.BorderWidth = 0f;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            dth.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Date : " + DateTime.Now.ToString("dd MMMM,yyyy" + " " + "HH : mm : ss : tt ") + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            dth.AddCell(cell);
+
             document.Add(dth);
             LineSeparator line = new LineSeparator(0f, 100, null, Element.ALIGN_CENTER, -2);
             document.Add(line);
             PdfPTable dtempty = new PdfPTable(1);
+            document.Add(dtempty);
             // cell.BorderWidth = 0f;
             //cell.BorderColor = BaseColor.LIGHT_GRAY;
 
             //int columnsCount = ReportGridView.HeaderRow.Cells.Count;
-            float[] gridtable = new float[4] { 12,5,8,8 };
+            float[] gridtable = new float[4] { 12, 5, 8, 8 };
             // Create the PDF Table specifying the number of columns
             PdfPTable pdfTable = new PdfPTable(gridtable);
             pdfTable.WidthPercentage = 100;
 
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-
-            //pdfTable.DefaultCell.Padding = 5;
-            //pdfTable.WidthPercentage = 100;
-            //pdfTable.DefaultCell.HorizontalAlignment = 2;
-            //pdfTable.DefaultCell.VerticalAlignment = 2;
-            //pdfTable.DefaultCell.BorderWidth = 0f;
-            //cell.BorderColor= BaseColor.LIGHT_GRAY;
-
             foreach (TableCell gridViewHeaderCell in ReportGridView.HeaderRow.Cells)
             {
-                PdfPCell pdfCell = new PdfPCell(new Phrase(gridViewHeaderCell.Text));
+                PdfPCell pdfCell = new PdfPCell(new Phrase(gridViewHeaderCell.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
+                pdfCell.HorizontalAlignment = 1;
+                pdfCell.VerticalAlignment = 1;
+                pdfCell.BorderWidth = 0f;
+                pdfCell.Padding = 5;
                 pdfTable.AddCell(pdfCell);
 
             }
@@ -319,21 +239,70 @@ namespace CoffeeShop.Item
                     {
 
                         PdfPCell pdfCell = new PdfPCell(new Phrase(gridViewCell.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-
+                        pdfCell.HorizontalAlignment = 1;
+                        pdfCell.VerticalAlignment = 1;
+                        pdfCell.BorderWidth = 0f;
+                        pdfCell.Padding = 2;
                         pdfTable.AddCell(pdfCell);
                     }
                 }
             }
+
+            PdfPTable dtempty1 = new PdfPTable(1);
+            document.Add(dtempty1);
+
+            LineSeparator line1 = new LineSeparator(0f, 100, null, Element.ALIGN_CENTER, -2);
+
+
+            PdfPTable dtempty2 = new PdfPTable(1);
+            document.Add(dtempty2);
 
             float[] titwidths = new float[1] { 200 };
             PdfPTable grnd = new PdfPTable(titwidths);
             dth.WidthPercentage = 100;
 
 
-            cell = new PdfPCell(new Phrase("Grand Total : "+txtSubTotal.Text+" ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 8, iTextSharp.text.Font.NORMAL)));
+            cell = new PdfPCell(new Phrase("Grand Total : " + txtSubTotal.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
             cell.HorizontalAlignment = 2;
             cell.VerticalAlignment = 2;
             cell.BorderWidth = 0f;
+            cell.Padding = 3;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            grnd.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Discount Percent : " + txtDiscount.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            cell.Padding = 3;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            grnd.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Payable Amount : " + txtTotalCost.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            cell.Padding = 3;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            grnd.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Paid Amount : " + txtPaidAmount.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            cell.Padding = 3;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            grnd.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Changes Amount : " + lblChanges.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            cell.Padding = 3;
             //cell.BorderColor = BaseColor.LIGHT_GRAY;
             //cell.FixedHeight = 20f;
             grnd.AddCell(cell);
@@ -342,6 +311,202 @@ namespace CoffeeShop.Item
             dtempty.AddCell(cell);
             document.Add(dtempty);
             document.Add(pdfTable);
+            dtempty1.AddCell(cell);
+            document.Add(dtempty1);
+            document.Add(line1);
+            dtempty2.AddCell(cell);
+            document.Add(dtempty2);
+            document.Add(grnd);
+
+            document.Close();
+            Response.Flush();
+            Response.End();
+        }
+        protected void AddButton_Click(object sender, EventArgs e)
+        {
+
+            LoadSaleItems();
+            LoadReport();
+            GridviewRowSum();
+
+        }
+
+        string s = "_";
+        protected void DeleteButton_Click(object sender, EventArgs e)
+        {
+            Response.Clear();
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-disposition", "attachment;filename=Invoice_" + txtSerial.Text + "" + s + "" + DateTime.Now.ToString() + ".pdf");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Document document = new Document();
+            document = new Document(PageSize.B6);
+            MemoryStream ms = new MemoryStream();
+            PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
+
+            document.Open();
+            float[] titwidth = new float[1] { 200 };
+            PdfPCell cell;
+            PdfPTable dth = new PdfPTable(titwidth);
+            dth.WidthPercentage = 100;
+
+            cell = new PdfPCell(new Phrase("Sajeeb Cofe House", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 12, iTextSharp.text.Font.BOLD)));
+            cell.HorizontalAlignment = 1;
+            cell.VerticalAlignment = 1;
+            cell.BorderWidth = 0f;
+            //cell.FixedHeight = 20f;
+            dth.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Moghbazer,Mirbagh,Shop-02 ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 1;
+            cell.VerticalAlignment = 1;
+            cell.BorderWidth = 0f;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            dth.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Your Reciept", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 8, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 1;
+            cell.VerticalAlignment = 1;
+            cell.BorderWidth = 0f;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            dth.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Cashier Name : "+txtCashierName.Text+" ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 0;
+            cell.VerticalAlignment = 0;
+            cell.BorderWidth = 0f;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            dth.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Customer Name : " + txtCustomerName.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 0;
+            cell.VerticalAlignment = 0;
+            cell.BorderWidth = 0f;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            dth.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Date : " + DateTime.Now.ToString("dd MMMM,yyyy" + " " + "HH : mm : ss : tt ") + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            dth.AddCell(cell);
+
+            document.Add(dth);
+            LineSeparator line = new LineSeparator(0f, 100, null, Element.ALIGN_CENTER, -2);
+            document.Add(line);
+            PdfPTable dtempty = new PdfPTable(1);
+            document.Add(dtempty);
+            // cell.BorderWidth = 0f;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+
+            //int columnsCount = ReportGridView.HeaderRow.Cells.Count;
+            float[] gridtable = new float[4] { 12,5,8,8 };
+            // Create the PDF Table specifying the number of columns
+            PdfPTable pdfTable = new PdfPTable(gridtable);
+            pdfTable.WidthPercentage = 100;
+
+            foreach (TableCell gridViewHeaderCell in ReportGridView.HeaderRow.Cells)
+            {
+                PdfPCell pdfCell = new PdfPCell(new Phrase(gridViewHeaderCell.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
+                pdfCell.HorizontalAlignment = 1;
+                pdfCell.VerticalAlignment = 1;
+                pdfCell.BorderWidth = 0f;
+                pdfCell.Padding = 5;
+                pdfTable.AddCell(pdfCell);
+
+            }
+
+            foreach (GridViewRow gridViewRow in ReportGridView.Rows)
+            {
+                if (gridViewRow.RowType == DataControlRowType.DataRow)
+                {
+                    // Loop thru each cell in GrdiView data row
+                    foreach (TableCell gridViewCell in gridViewRow.Cells)
+                    {
+
+                        PdfPCell pdfCell = new PdfPCell(new Phrase(gridViewCell.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+                        pdfCell.HorizontalAlignment = 1;
+                        pdfCell.VerticalAlignment = 1;
+                        pdfCell.BorderWidth = 0f;
+                        pdfCell.Padding = 2;
+                        pdfTable.AddCell(pdfCell);
+                    }
+                }
+            }
+
+            PdfPTable dtempty1 = new PdfPTable(1);
+            document.Add(dtempty1);
+
+            LineSeparator line1 = new LineSeparator(0f, 100, null, Element.ALIGN_CENTER, -2);
+            
+
+            PdfPTable dtempty2 = new PdfPTable(1);
+            document.Add(dtempty2);
+
+            float[] titwidths = new float[1] {200};
+            PdfPTable grnd = new PdfPTable(titwidths);
+            dth.WidthPercentage = 100;
+
+
+            cell = new PdfPCell(new Phrase("Grand Total : "+txtSubTotal.Text+" ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            cell.Padding = 3;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            grnd.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Discount Percent : " + txtDiscount.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            cell.Padding = 3;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            grnd.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Payable Amount : " + txtTotalCost.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            cell.Padding = 3;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            grnd.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Paid Amount : " + txtPaidAmount.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            cell.Padding = 3;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            grnd.AddCell(cell);
+
+            cell = new PdfPCell(new Phrase("Changes Amount : " + lblChanges.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
+            cell.HorizontalAlignment = 2;
+            cell.VerticalAlignment = 2;
+            cell.BorderWidth = 0f;
+            cell.Padding = 3;
+            //cell.BorderColor = BaseColor.LIGHT_GRAY;
+            //cell.FixedHeight = 20f;
+            grnd.AddCell(cell);
+
+            cell.FixedHeight = 10f;
+            dtempty.AddCell(cell);
+            document.Add(dtempty);
+            document.Add(pdfTable);
+            dtempty1.AddCell(cell);
+            document.Add(dtempty1);
+            document.Add(line1);
+            dtempty2.AddCell(cell);
+            document.Add(dtempty2);
             document.Add(grnd);
 
             document.Close();
@@ -397,22 +562,6 @@ namespace CoffeeShop.Item
             { }
         }
 
-        protected void ItemSalesGridView_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void ItemSalesGridView_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            //ItemSalesGridView.PageIndex = e.NewPageIndex;
-            //LoadSaleItems();
-        }
-
-        protected void TotalButton_Click(object sender, EventArgs e)
-        {
-            DiscountCalculation();
-        }
-
         protected void txtPaidAmount_TextChanged(object sender, EventArgs e)
         {
             decimal totalcost = Convert.ToDecimal(txtTotalCost.Text);
@@ -421,70 +570,95 @@ namespace CoffeeShop.Item
             decimal changes = PaidAmount - totalcost;
             lblChanges.Text = Convert.ToDecimal(changes).ToString();
         }
-
-        protected void PrintButton_Click(object sender, EventArgs e)
-        { 
-            try
-            {
-                foreach (GridViewRow gr in ItemSalesGridView.Rows)
-                {
-                    ItemSales _ItemSales = new ItemSales();
-                    _ItemSales.Name = (gr.Cells[1].Text);
-                    _ItemSales.Qty=Convert.ToInt32(gr.Cells[2].Text);
-                    _ItemSales.Per_Price = Convert.ToDecimal(gr.Cells[3].Text);
-                    _ItemSales.Sub_Price = Convert.ToDecimal(gr.Cells[4].Text);
-                    _ItemSales.Serial = txtSerial.Text;
-
-                    int savesuccess = _ItemSalesRepository.Add(_ItemSales);
-                }
-
-                AccountSales _AccountSales = new AccountSales();
-                _AccountSales.Serial = txtSerial.Text;
-                _AccountSales.CashierName = txtCashierName.Text;
-                _AccountSales.CustomerName = txtCustomerName.Text;
-                _AccountSales.GrandTotal = Convert.ToDecimal(txtTotalCost.Text);
-                _AccountSales.Discount = Convert.ToDecimal(txtDiscount.Text);
-                _AccountSales.PaidAmount = Convert.ToDecimal(txtPaidAmount.Text);
-                _AccountSales.ChangesAmount = Convert.ToDecimal(lblChanges.Text);
-
-                int savesuccess1 = _ItemSalesRepository.AddAccountSale(_AccountSales);
-                if (savesuccess1 > 0)
-                {
-                    //AutoCodeGenerate();
-                    Response.Redirect(Request.Url.AbsoluteUri);
-                }
-                else
-                {
-
-                }
-            }
-            catch
-            {}
+        protected void txtDiscount_TextChanged(object sender, EventArgs e)
+        {
+            DiscountCalculation();
         }
 
-        protected void ItemSalesGridView_RowCommand(object sender, GridViewCommandEventArgs e)
+        protected void PrintButton_Click(object sender, EventArgs e)
         {
+            SqlTransaction transaction = null;
+            var sql = _MainRepository.ConnectionString();
+            using (SqlConnection Sqlcon=new SqlConnection(sql))
+            {
+                Sqlcon.Open();
+                transaction = Sqlcon.BeginTransaction();
+                try
+                {
+                    AccountSales _AccountSales = new AccountSales();
+                    _AccountSales.Serial = txtSerial.Text;
+                    _AccountSales.CashierName = txtCashierName.Text;
+                    _AccountSales.CustomerName = txtCustomerName.Text;
+                    _AccountSales.GrandTotal = Convert.ToDecimal(txtTotalCost.Text);
+                    _AccountSales.Discount = Convert.ToDecimal(txtDiscount.Text);
+                    _AccountSales.PaidAmount = Convert.ToDecimal(txtPaidAmount.Text);
+                    _AccountSales.ChangesAmount = Convert.ToDecimal(lblChanges.Text);
+
+                    SqlCommand command1 = new SqlCommand("Insert Into AccountSales(Serial,CashierName,CustomerName,GrandTotal,Discount,PaidAmount,ChangesAmount,Date) Values ('" + _AccountSales.Serial + "','" + _AccountSales.CashierName + "','" + _AccountSales.CustomerName + "','" + _AccountSales.GrandTotal + "','" + _AccountSales.Discount + "','" + _AccountSales.PaidAmount + "','" + _AccountSales.ChangesAmount + "','" + DateTime.Now.ToShortDateString() + "')", Sqlcon, transaction);
+                    command1.CommandType = CommandType.Text;
+                    command1.ExecuteNonQuery(); //AccountSale Save;
+
+                    //ItemSales Start With foreach
+
+                    foreach (GridViewRow gr in ItemSalesGridView.Rows)
+                    {
+                        ItemSales _ItemSales = new ItemSales();
+                        _ItemSales.Name = (gr.Cells[1].Text);
+                        _ItemSales.Qty = Convert.ToInt32(gr.Cells[2].Text);
+                        _ItemSales.Per_Price = Convert.ToDecimal(gr.Cells[3].Text);
+                        _ItemSales.Sub_Price = Convert.ToDecimal(gr.Cells[4].Text);
+                        _ItemSales.Serial = txtSerial.Text;
+
+                        SqlCommand command = new SqlCommand("Insert Into ItemSales(Name,Qty,Per_Price,Sub_Price,Serial,Date) Values ('" + _ItemSales.Name + "','" + _ItemSales.Qty + "','" + _ItemSales.Per_Price + "','" + _ItemSales.Sub_Price + "','" + _ItemSales.Serial + "','" + DateTime.Now.ToShortDateString() + "')", Sqlcon, transaction);
+                        command.CommandType = CommandType.Text;
+                        command.ExecuteNonQuery();
+
+
+                    }
+
+                    transaction.Commit();
+                    CreatePdf();
+                    Response.Redirect(Request.Url.AbsoluteUri);
+
+                }
+                catch
+                {
+                    transaction.Rollback();
+                }
+                finally
+                {
+                    Sqlcon.Close();
+                }
+            }
+
             //try
             //{
 
-            //    int successdelete = _ItemSalesRepository.Delete(Convert.ToInt32(e.CommandArgument));
-            //    if(successdelete>0)
+
+            //    AccountSales _AccountSales = new AccountSales();
+            //    _AccountSales.Serial = txtSerial.Text;
+            //    _AccountSales.CashierName = txtCashierName.Text;
+            //    _AccountSales.CustomerName = txtCustomerName.Text;
+            //    _AccountSales.GrandTotal = Convert.ToDecimal(txtTotalCost.Text);
+            //    _AccountSales.Discount = Convert.ToDecimal(txtDiscount.Text);
+            //    _AccountSales.PaidAmount = Convert.ToDecimal(txtPaidAmount.Text);
+            //    _AccountSales.ChangesAmount = Convert.ToDecimal(lblChanges.Text);
+
+            //    int savesuccess1 = _ItemSalesRepository.AddAccountSale(_AccountSales);
+            //    if (savesuccess1 > 0)
             //    {
-            //        lblCashierName.Text = "delete";
-            //        LoadSaleItems();
-            //        LoadReport();
-            //        GridviewRowSum();
+            //        //AutoCodeGenerate();
+            //        Response.Redirect(Request.Url.AbsoluteUri);
             //    }
             //    else
             //    {
 
             //    }
             //}
-            //catch(Exception ex)
-            //{
-
-            //}
+            //catch
+            //{ }
         }
+
         protected void ItemSalesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             dataTable = (DataTable)ViewState["Details"];
