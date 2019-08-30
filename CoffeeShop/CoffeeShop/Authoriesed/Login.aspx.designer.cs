@@ -7,10 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CoffeeShop.Product {
+namespace CoffeeShop.Authoriesed {
     
     
-    public partial class Setup {
+    public partial class Login {
         
         /// <summary>
         /// lblMessage control.
@@ -22,111 +22,93 @@ namespace CoffeeShop.Product {
         protected global::System.Web.UI.WebControls.Label lblMessage;
         
         /// <summary>
-        /// lblCategory control.
+        /// lblAdmin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCategory;
+        protected global::System.Web.UI.WebControls.Label lblAdmin;
         
         /// <summary>
-        /// txtCategory control.
+        /// txtAdmin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCategory;
+        protected global::System.Web.UI.WebControls.TextBox txtAdmin;
         
         /// <summary>
-        /// AddCategoriesButton control.
+        /// lblPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button AddCategoriesButton;
+        protected global::System.Web.UI.WebControls.Label lblPassword;
         
         /// <summary>
-        /// CategoriesGridView control.
+        /// txtAdminPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView CategoriesGridView;
+        protected global::System.Web.UI.WebControls.TextBox txtAdminPassword;
         
         /// <summary>
-        /// lblCategories control.
+        /// AddLoginButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCategories;
+        protected global::System.Web.UI.WebControls.Button AddLoginButton;
         
         /// <summary>
-        /// CategoriesDropDownList control.
+        /// lblAuthorised control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList CategoriesDropDownList;
+        protected global::System.Web.UI.WebControls.Label lblAuthorised;
         
         /// <summary>
-        /// lblItemName control.
+        /// txtAuthoriesed control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblItemName;
+        protected global::System.Web.UI.WebControls.TextBox txtAuthoriesed;
         
         /// <summary>
-        /// txtItemName control.
+        /// lblAuthorisedPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtItemName;
+        protected global::System.Web.UI.WebControls.Label lblAuthorisedPassword;
         
         /// <summary>
-        /// lblPrice control.
+        /// txtAuthorisedPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPrice;
+        protected global::System.Web.UI.WebControls.TextBox txtAuthorisedPassword;
         
         /// <summary>
-        /// txtPrice control.
+        /// AuthorisedLoginButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPrice;
-        
-        /// <summary>
-        /// AddItemButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button AddItemButton;
-        
-        /// <summary>
-        /// ItemGridView control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView ItemGridView;
+        protected global::System.Web.UI.WebControls.Button AuthorisedLoginButton;
     }
 }

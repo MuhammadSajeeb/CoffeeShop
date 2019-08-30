@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Coffee.Core.Models
 {
-    public class Items
+    public class Admin
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; }
-        public int CategoriesId { get; set; }
+        public string Password { get; set; }
 
     }
 }

@@ -10,23 +10,23 @@ namespace Coffee.Persistancis.Repositories
     public class ItemRepository
     {
         MainRepository _MainRepository = new MainRepository();
-        public decimal AlreadyExistItem(Items _Items)
+        public decimal AlreadyExistItem(ItemsM _Items)
         {
             string query = "Select Count(*)from Items Where Name='" + _Items.Name + "' And Categoriesid='" + _Items.CategoriesId + "' ";
             return _MainRepository.ExecuteScalar(query, _MainRepository.ConnectionString());
         }
-        public int Add(Items _Items)
+        public int Add(ItemsM _Items)
         {
             string query = "Insert Into Items(Name,Price,CategoriesId) Values ('" + _Items.Name + "','" + _Items.Price + "','" + _Items.CategoriesId + "')";
             return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
         }
-        public int Update(Items _Items)
+        public int Update(ItemsM _Items)
         {
             string query = "Update Items SET Name='" + _Items.Name + "',Price='" + _Items.Price + "' Where Id='" + _Items.Id + "' ";
             return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
         }
 
-        public int Delete(Items _Items)
+        public int Delete(ItemsM _Items)
         {
             string query = ("Delete From Items Where Id='" + _Items.Id + "'");
             return _MainRepository.ExecuteNonQuery(query, _MainRepository.ConnectionString());
@@ -51,16 +51,16 @@ namespace Coffee.Persistancis.Repositories
 
             return _CategoryList;
         }
-        public List<Items> GetAll(int id)
+        public List<ItemsM> GetAll(int id)
         {
-            var _ItemsList = new List<Items>();
+            var _ItemsList = new List<ItemsM>();
             string query = ("Select *From Items where CategoriesId='" + id + "' ");
             var reader = _MainRepository.Reader(query, _MainRepository.ConnectionString());
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    var _Items = new Items();
+                    var _Items = new ItemsM();
                     _Items.Id = Convert.ToInt32(reader["Id"].ToString());
                     _Items.Name = reader["Name"].ToString();
                     _Items.Price = Convert.ToDecimal(reader["Price"].ToString());

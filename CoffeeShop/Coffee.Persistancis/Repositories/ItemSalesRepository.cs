@@ -51,16 +51,16 @@ namespace Coffee.Persistancis.Repositories
 
             return _CategoryList;
         }
-        public List<Items> GetAllItemsByCategories(int id)
+        public List<ItemsM> GetAllItemsByCategories(int id)
         {
-            var _ItemsList = new List<Items>();
+            var _ItemsList = new List<ItemsM>();
             string query = ("Select *From Items where CategoriesId='" + id + "' ");
             var reader = _MainRepository.Reader(query, _MainRepository.ConnectionString());
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    var _Items = new Items();
+                    var _Items = new ItemsM();
                     _Items.Id = Convert.ToInt32(reader["Id"].ToString());
                     _Items.Name = reader["Name"].ToString();
 
@@ -72,16 +72,16 @@ namespace Coffee.Persistancis.Repositories
             return _ItemsList;
         }
 
-        public Items GetPriceByItem(int Id)
+        public ItemsM GetPriceByItem(int Id)
         {
-            Items _Items = null;
+            ItemsM _Items = null;
 
             string query = ("Select *From Items where Id='" + Id + "' ");
             var reader = _MainRepository.Reader(query, _MainRepository.ConnectionString());
             if (reader.HasRows)
             {
                 reader.Read();
-                _Items = new Items();
+                _Items = new ItemsM();
                 _Items.Price = Convert.ToDecimal(reader["Price"].ToString());
             }
             reader.Close();
