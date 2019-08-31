@@ -17,7 +17,7 @@ namespace Coffee.Persistancis.Repositories
             return _MainRepository.ExecuteScalar(query, _MainRepository.ConnectionString());
         }
 
-        public decimal AuthorisedLogin(Authorization _Authorization)
+        public decimal AuthorisedLogin(Authorizations _Authorization)
         {
             string query = "Select Count(*)from Users Where Person='" + _Authorization.Person + "' And Password='" + _Authorization.Password + "' ";
             return _MainRepository.ExecuteScalar(query, _MainRepository.ConnectionString());

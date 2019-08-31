@@ -1,10 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Sales.aspx.cs" Inherits="CoffeeShop.Item.Sales" %>
-
-<%@ Register Assembly="Microsoft.ReportViewer.WebForms" Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="form-horizontal">
-        <div class="form-horizontal">
+<div class="form-horizontal">
             <hr />
             <asp:HiddenField ID="IdHiddenField" runat="server" />
             <div class="form-group">
@@ -107,7 +103,6 @@
                     <asp:Button runat="server" ID="PrintButton" Text="Print" CssClass="btn btn-info" OnClick="PrintButton_Click" />
                 </div>
             </div>
-        </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-5">
                     <asp:GridView ID="ReportGridView" runat="server" EmptyDataText="No Order Available Here" Width="100%" CssClass="table table-striped table-bordered table-hover" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="10" ForeColor="Black" GridLines="Horizontal" AllowPaging="True" CellSpacing="10" Visible="false">

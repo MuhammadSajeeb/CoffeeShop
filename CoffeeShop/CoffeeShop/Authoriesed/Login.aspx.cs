@@ -16,7 +16,9 @@ namespace CoffeeShop.Authoriesed
         public enum MessageType { Success, Failed, Error, Info, Warning };
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if(!IsPostBack)
+            {
+            }
         }
         protected void ShowMessage(string Message, MessageType type)
         {
@@ -50,7 +52,7 @@ namespace CoffeeShop.Authoriesed
         {
             try
             {
-                Authorization _Authorization = new Authorization();
+                Authorizations _Authorization = new Authorizations();
                 _Authorization.Person = txtAuthoriesed.Text;
                 _Authorization.Password = txtAuthorisedPassword.Text;
 

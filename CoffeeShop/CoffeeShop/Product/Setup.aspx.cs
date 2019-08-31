@@ -19,8 +19,16 @@ namespace CoffeeShop.Product
         {
             if(!IsPostBack)
             {
-                LoadCategories();
-                GetAllCategories();
+                if(Session["Admin"] != null)
+                {
+                    LoadCategories();
+                    GetAllCategories();
+                    
+                }
+                else
+                {
+                    Response.Redirect("~/Authoriesed/Login.aspx");
+                }
             }
         }
         protected void ShowMessage(string Message, MessageType type)

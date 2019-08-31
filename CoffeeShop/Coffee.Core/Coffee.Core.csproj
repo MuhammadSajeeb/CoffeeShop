@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="Models\AccountSales.cs" />
     <Compile Include="Models\Admin.cs" />
-    <Compile Include="Models\Authorization.cs" />
+    <Compile Include="Models\Authorizations.cs" />
     <Compile Include="Models\Categories.cs" />
     <Compile Include="Models\ItemsM.cs" />
     <Compile Include="Models\ItemSales.cs" />

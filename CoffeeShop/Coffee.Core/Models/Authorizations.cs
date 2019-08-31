@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Coffee.Core.Models
 {
-    public class Authorization
+    public class Authorizations
     {
         public int Id { get; set; }
         public string Person { get; set; }

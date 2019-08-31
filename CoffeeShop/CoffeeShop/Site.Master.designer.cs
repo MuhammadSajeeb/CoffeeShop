@@ -13,6 +13,33 @@ namespace CoffeeShop {
     public partial class SiteMaster {
         
         /// <summary>
+        /// lnProduct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnProduct;
+        
+        /// <summary>
+        /// lnItemSales control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnItemSales;
+        
+        /// <summary>
+        /// lnLogout control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnLogout;
+        
+        /// <summary>
         /// MainContent control.
         /// </summary>
         /// <remarks>
