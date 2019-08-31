@@ -132,6 +132,9 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Images\categories.jpg" />
+    <Content Include="Images\coffee-shop-logo-02-.jpg" />
+    <Content Include="Images\CoffeShopLogo.jpg" />
     <Content Include="Item\Sales.aspx" />
     <Content Include="Product\Setup.aspx" />
     <Content Include="Scripts\bootstrap.js" />

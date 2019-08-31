@@ -46,7 +46,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server" href="~/Item/Sales">CoffeeShop</a>
+                    <a class="navbar-brand" runat="server"><span><img alt="logo" src="Images/CoffeShopLogo-02.jpg"/></span></a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">

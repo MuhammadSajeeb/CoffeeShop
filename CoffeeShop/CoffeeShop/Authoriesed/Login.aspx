@@ -4,7 +4,7 @@
     <br />
     <h4>Account Login</h4>
     <br />
-    <div class="form-horizontal">
+    <div class="form-horizontal" style="background-image: none">
         <div class="form-group">
             <asp:Label runat="server" ID="lblMessage" AssociatedControlID="lblMessage" CssClass="col-md-1 control-label"></asp:Label>
             <div class="col-md-10">

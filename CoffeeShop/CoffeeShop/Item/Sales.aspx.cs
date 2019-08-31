@@ -1052,8 +1052,7 @@ namespace CoffeeShop.Item
             }
             else
             {
-                ViewState["Details"] = null;
-                LoadSaleItems();
+                //Response.Redirect(Request.Url.AbsoluteUri);
             }
 
         }
@@ -1073,7 +1072,5 @@ namespace CoffeeShop.Item
         {
             return new Phrase(value, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 11, iTextSharp.text.Font.BOLD));
         }
-
-
     }
 }

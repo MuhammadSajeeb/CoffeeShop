@@ -15,12 +15,13 @@ namespace CoffeeShop
             {
                 if(Session["Admin"]!=null)
                 {
-                     
+                    lnProduct.Visible = true;
+                    lnItemSales.Visible = true;
+                    lnLogout.Visible = true;
                 }
-                else if(Session["Authorised"]!=null)
+                else if(Session["Authorised"] !=null)
                 {
                     lnProduct.Visible = false;
-                     
                 }
                 else
                 {
