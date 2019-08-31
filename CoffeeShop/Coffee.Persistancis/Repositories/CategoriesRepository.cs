@@ -9,7 +9,7 @@ namespace Coffee.Persistancis.Repositories
 {
     public class CategoriesRepository
     {
-        MainRepository _MainRepository = new MainRepository();
+
         //public decimal AlreadyExistData()
         //{
         //    string query = "Select Count(*)from Categories ";
@@ -31,6 +31,7 @@ namespace Coffee.Persistancis.Repositories
 
         //    return _Categories;
         //}
+        MainRepository _MainRepository = new MainRepository();
         public decimal AlreadyExistName(Categories _Categories)
         {
             string query = "Select Count(*)from Categories Where Name='" + _Categories.Name + "' ";

@@ -33,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-7 col-md-12">
-                                <asp:Button ID="AddLoginButton" runat="server" Text="Login" CssClass="btn btn-info" Width="85px" OnClick="AddLoginButton_Click" />
+                                <asp:Button ID="AdminLoginButton" runat="server" Text="Login" CssClass="btn btn-info" Width="85px" OnClick="AdminLoginButton_Click"/>
                             </div>
                         </div>
                     </div>

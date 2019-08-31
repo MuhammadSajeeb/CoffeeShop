@@ -30,8 +30,16 @@ namespace CoffeeShop.Item
                 GetALLCategories();
                 ItemsDropDownList.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Select Items", "0"));
                 txtDiscount.Text = "0";
-                txtCashierName.Text = "Mr.Sajib";
-                txtDate.Text = DateTime.Now.ToString("MMMM dd,yyyy"+" " + "HH : MM : SS ");
+                txtDate.Text = DateTime.Now.ToString("MMMM dd,yyyy");
+                if(Session["Admin"].ToString()!=null)
+                {
+                    txtCashierName.Text = Session["Admin"].ToString();
+                }
+                else
+                {
+                    txtCashierName.Text = Session["Authorised"].ToString();
+                }
+
             }
         }
         public void AutoCodeGenerate()
