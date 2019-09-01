@@ -15,6 +15,7 @@ namespace CoffeeShop
             {
                 if(Session["Admin"]!=null)
                 {
+                    lnDashboard.Visible = true;
                     lnProduct.Visible = true;
                     lnItemSales.Visible = true;
                     lnLogout.Visible = true;
@@ -28,6 +29,7 @@ namespace CoffeeShop
                     lnProduct.Visible = false;
                     lnItemSales.Visible = false;
                     lnLogout.Visible = false;
+                    lnDashboard.Visible = false;
                 }
             }
         }

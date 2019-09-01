@@ -18,6 +18,7 @@ namespace CoffeeShop.Authoriesed
         {
             if(!IsPostBack)
             {
+                Session.RemoveAll();
             }
         }
         protected void ShowMessage(string Message, MessageType type)
@@ -36,7 +37,7 @@ namespace CoffeeShop.Authoriesed
                 if(AdminLogin>=1)
                 {
                     Session["Admin"] = txtAdmin.Text;
-                    Response.Redirect("~/Default.aspx");
+                    Response.Redirect("~/Dashboard.aspx");
                 }
                 else
                 {
@@ -60,7 +61,7 @@ namespace CoffeeShop.Authoriesed
                 if (AuthorisedPersonLogin >= 1)
                 {
                     Session["Authorised"] = txtAuthoriesed.Text;
-                    Response.Redirect("~/Default.aspx");
+                    Response.Redirect("~/Dashboard.aspx");
                 }
                 else
                 {

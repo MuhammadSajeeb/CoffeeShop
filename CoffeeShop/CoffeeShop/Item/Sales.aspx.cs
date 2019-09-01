@@ -123,11 +123,6 @@ namespace CoffeeShop.Item
             ViewState["Details"] = dataTable;
 
         }
-        public void LoadReport()
-        {
-            ReportGridView.DataSource = dataTable;
-            ReportGridView.DataBind();
-        }
         public void GridviewRowSum()
         {
             //string serial;
@@ -1056,6 +1051,11 @@ namespace CoffeeShop.Item
             }
 
         }
+        protected void ItemSalesGridView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CategoriesDropDownList.Enabled = false;
+            ItemsDropDownList.Enabled = false;
+        }
         private static Phrase FormatPhrase(string value)
         {
             return new Phrase(value, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 8));
@@ -1072,5 +1072,7 @@ namespace CoffeeShop.Item
         {
             return new Phrase(value, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 11, iTextSharp.text.Font.BOLD));
         }
+
+
     }
 }
