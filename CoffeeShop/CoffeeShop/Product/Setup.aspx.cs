@@ -72,10 +72,13 @@ namespace CoffeeShop.Product
                     int Savesuccess = _CategoriesRepository.Add(_Categories);
                     if(Savesuccess > 0)
                     {
+
                         ShowMessage("Successfully Saved Category....", MessageType.Success);
                         LoadCategories();
+                        GetAllCategories();
                         txtCategory.Text = "";
-                        //        Response.Redirect(Request.Url.AbsoluteUri);
+                        //Response.Redirect(Request.Url.AbsoluteUri);
+                        
 
                     }
                     else

@@ -46,11 +46,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server">CoffeeHouse</a>
+                    <a class="navbar-brand" runat="server" href="~/Dashboard">CoffeeHouse</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a runat="server" id="lnDashboard" href="~/Dashboard">Dashboard</a></li>
+                        <li><a runat="server" id="lnAdminName" style="color:red">Welcome! <b><%=Session["Admin"].ToString()%></b></a></li>
+                        <li><a runat="server" id="lnAuthorised" style="color:red">Welcome! <b><%=Session["Authorised"].ToString()%></b></a></li>
                         <li><a runat="server" id="lnProduct" href="~/Product/Setup">Product Setup</a></li>
                         <li><a runat="server" id="lnItemSales" href="~/Item/Sales">Item Sales</a></li>
                         <li><a runat="server" id="lnLogout" href="~/Authoriesed/Logout">Logout</a></li>     

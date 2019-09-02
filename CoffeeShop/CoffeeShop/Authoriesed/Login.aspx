@@ -33,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-7 col-md-12">
-                                <asp:Button ID="AdminLoginButton" runat="server" Text="Login" CssClass="btn btn-info" Width="85px" OnClick="AdminLoginButton_Click"/>
+                                <asp:Button ID="AdminLoginButton" runat="server" Text="Login" CssClass="btn btn-info" Width="85px" OnClick="AdminLoginButton_Click" />
                             </div>
                         </div>
                     </div>
@@ -94,5 +94,4 @@
             $('#alert_container').append('<div id="alert_div" style="margin: 0 0.5%; -webkit-box-shadow: 3px 4px 6px #999;" class="alert fade in ' + cssclass + '"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' + messagetype + '!</strong> <span>' + message + '</span></div>');
         }
     </script>
-
 </asp:Content>

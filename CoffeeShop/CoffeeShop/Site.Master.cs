@@ -15,21 +15,24 @@ namespace CoffeeShop
             {
                 if(Session["Admin"]!=null)
                 {
-                    lnDashboard.Visible = true;
+                    lnAdminName.Visible = true;
+                    lnAuthorised.Visible = false;
                     lnProduct.Visible = true;
                     lnItemSales.Visible = true;
                     lnLogout.Visible = true;
                 }
                 else if(Session["Authorised"] !=null)
                 {
+                    lnAdminName.Visible = false;
                     lnProduct.Visible = false;
                 }
                 else
                 {
+                    lnAdminName.Visible = false;
+                    lnAuthorised.Visible = false;
                     lnProduct.Visible = false;
                     lnItemSales.Visible = false;
                     lnLogout.Visible = false;
-                    lnDashboard.Visible = false;
                 }
             }
         }

@@ -76,7 +76,7 @@ namespace CoffeeShop.Item
             CategoriesDropDownList.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Select Categories", "0"));
 
         }
-        public void LoadSaleItems()
+        public void AddSaleItems()
         {
             //string serial;
             //serial = txtSerial.Text;
@@ -170,10 +170,11 @@ namespace CoffeeShop.Item
             dth.WidthPercentage = 100;
 
             cell = new PdfPCell(new Phrase("Sajeeb Cofe House", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 12, iTextSharp.text.Font.BOLD)));
+            cell.HorizontalAlignment = 1;
             cell.VerticalAlignment = 1;
             cell.BorderWidth = 0f;
             //cell.FixedHeight = 20f;
-            dth.AddCell(cell); cell.HorizontalAlignment = 1;
+            dth.AddCell(cell);
 
 
             cell = new PdfPCell(new Phrase("Moghbazer,Mirbagh,Shop-02 ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
@@ -517,7 +518,9 @@ namespace CoffeeShop.Item
         protected void AddButton_Click(object sender, EventArgs e)
         {
 
-            LoadSaleItems();
+            AddSaleItems();
+            txtQty.Text = "";
+            txtSubPrice.Text = "";
             GridviewRowSum();
 
         }
@@ -543,10 +546,11 @@ namespace CoffeeShop.Item
             dth.WidthPercentage = 100;
 
             cell = new PdfPCell(new Phrase("Sajeeb Cofe House", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 12, iTextSharp.text.Font.BOLD)));
+            cell.HorizontalAlignment = 1;
             cell.VerticalAlignment = 1;
             cell.BorderWidth = 0f;
             //cell.FixedHeight = 20f;
-            dth.AddCell(cell);            cell.HorizontalAlignment = 1;
+            dth.AddCell(cell);            
 
 
             cell = new PdfPCell(new Phrase("Moghbazer,Mirbagh,Shop-02 ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
@@ -985,13 +989,11 @@ namespace CoffeeShop.Item
                         SqlCommand command = new SqlCommand("Insert Into ItemSales(Name,Qty,Per_Price,Sub_Price,Serial,Date) Values ('" + _ItemSales.Name + "','" + _ItemSales.Qty + "','" + _ItemSales.Per_Price + "','" + _ItemSales.Sub_Price + "','" + _ItemSales.Serial + "','" + DateTime.Now.ToShortDateString() + "')", Sqlcon, transaction);
                         command.CommandType = CommandType.Text;
                         command.ExecuteNonQuery();
-
-
                     }
 
                     transaction.Commit();
                     CreatePdf();
-                    Response.Redirect(Request.Url.AbsoluteUri);
+                    
 
                 }
                 catch
@@ -1003,33 +1005,6 @@ namespace CoffeeShop.Item
                     Sqlcon.Close();
                 }
             }
-
-            //try
-            //{
-
-
-            //    AccountSales _AccountSales = new AccountSales();
-            //    _AccountSales.Serial = txtSerial.Text;
-            //    _AccountSales.CashierName = txtCashierName.Text;
-            //    _AccountSales.CustomerName = txtCustomerName.Text;
-            //    _AccountSales.GrandTotal = Convert.ToDecimal(txtTotalCost.Text);
-            //    _AccountSales.Discount = Convert.ToDecimal(txtDiscount.Text);
-            //    _AccountSales.PaidAmount = Convert.ToDecimal(txtPaidAmount.Text);
-            //    _AccountSales.ChangesAmount = Convert.ToDecimal(lblChanges.Text);
-
-            //    int savesuccess1 = _ItemSalesRepository.AddAccountSale(_AccountSales);
-            //    if (savesuccess1 > 0)
-            //    {
-            //        //AutoCodeGenerate();
-            //        Response.Redirect(Request.Url.AbsoluteUri);
-            //    }
-            //    else
-            //    {
-
-            //    }
-            //}
-            //catch
-            //{ }
         }
 
         protected void ItemSalesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
@@ -1051,10 +1026,48 @@ namespace CoffeeShop.Item
             }
 
         }
-        protected void ItemSalesGridView_SelectedIndexChanged(object sender, EventArgs e)
+        protected void ItemSalesGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            CategoriesDropDownList.Enabled = false;
-            ItemsDropDownList.Enabled = false;
+            ItemSalesGridView.EditIndex = -1;
+
+            ItemSalesGridView.DataSource = (DataTable)ViewState["Details"];
+            ItemSalesGridView.DataBind();
+        }
+
+        protected void ItemSalesGridView_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            //Change the gridview to edit mode
+            ItemSalesGridView.EditIndex = e.NewEditIndex;
+
+            //Now bind the gridview
+            ItemSalesGridView.DataSource = (DataTable)ViewState["Details"];
+            ItemSalesGridView.DataBind();
+        }
+
+        protected void ItemSalesGridView_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            //Findout the controls inside the gridview
+            txtQty.Text = ItemSalesGridView.Rows[e.RowIndex].Cells[2].Text;
+            txtSubPrice.Text = ItemSalesGridView.Rows[e.RowIndex].Cells[3].Text;
+
+            //Assign the ViewState to the datatable
+            DataRow dr = ((DataTable)ViewState["Details"]).Rows[e.RowIndex];
+
+            dr.BeginEdit();
+
+            dr["Qty"] = Convert.ToInt32(txtQty.Text);
+            dr["Perprice"] = Convert.ToDecimal(txtSubPrice.Text);
+            dr["Subprice"] = Convert.ToDecimal(txtSubPrice.Text);
+
+            dr.EndEdit();
+
+            dr.AcceptChanges();
+
+            ItemSalesGridView.EditIndex = -1;
+
+            //Now bind the datatable to the gridview
+            ItemSalesGridView.DataSource = (DataTable)ViewState["Details"];
+            ItemSalesGridView.DataBind();
         }
         private static Phrase FormatPhrase(string value)
         {
@@ -1072,7 +1085,5 @@ namespace CoffeeShop.Item
         {
             return new Phrase(value, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 11, iTextSharp.text.Font.BOLD));
         }
-
-
     }
 }
