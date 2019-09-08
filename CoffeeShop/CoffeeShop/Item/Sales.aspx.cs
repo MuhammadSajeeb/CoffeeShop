@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+
 namespace CoffeeShop.Item
 {
     public partial class Sales : System.Web.UI.Page
@@ -76,6 +77,7 @@ namespace CoffeeShop.Item
             CategoriesDropDownList.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Select Categories", "0"));
 
         }
+
         public void AddSaleItems()
         {
             //string serial;
@@ -83,13 +85,14 @@ namespace CoffeeShop.Item
 
             //ItemSalesGridView.DataSource = _ItemSalesRepository.GetAllSaleItems(serial);
             //ItemSalesGridView.DataBind();
-
+            DataTable dataTable = new DataTable();
             dataTable.Columns.Add("Name", typeof(string));
-            dataTable.Columns.Add("Qty", typeof(int));
+            dataTable.Columns.Add("Qty", typeof(decimal));
             dataTable.Columns.Add("Perprice", typeof(decimal));
             dataTable.Columns.Add("Subprice", typeof(decimal));
             DataRow dr = null;
-            if (ViewState["Details"] != null)
+            var data = (DataTable)ViewState["Details"];
+            if (data!=null)
             {
                 for (int i = 0; i < 1; i++)
                 {
@@ -100,11 +103,24 @@ namespace CoffeeShop.Item
                         dr["Name"] = ItemsDropDownList.SelectedItem.ToString();
                         dr["Qty"] = txtQty.Text;
                         dr["Perprice"] = txtItemPrice.Text;
-                        dr["Subprice"] = txtSubPrice.Text;
+                        dr["Subprice"] = Convert.ToDecimal(dr["Qty"]) * Convert.ToDecimal(dr["Perprice"]);
                         dataTable.Rows.Add(dr);
 
                         ItemSalesGridView.DataSource = dataTable;
                         ItemSalesGridView.DataBind();
+                    }
+                    else
+                    {
+                        dr = dataTable.NewRow();
+                        dr["Name"] = ItemsDropDownList.SelectedItem.ToString();
+                        dr["Qty"] = txtQty.Text;
+                        dr["Perprice"] = txtItemPrice.Text;
+                        dr["Subprice"] = Convert.ToDecimal(dr["Qty"]) * Convert.ToDecimal(dr["Perprice"]);
+                        dataTable.Rows.Add(dr);
+
+                        ItemSalesGridView.DataSource = dataTable;
+                        ItemSalesGridView.DataBind();
+
                     }
                 }
             }
@@ -114,7 +130,7 @@ namespace CoffeeShop.Item
                 dr["Name"] = ItemsDropDownList.SelectedItem.ToString();
                 dr["Qty"] = txtQty.Text;
                 dr["Perprice"] = txtItemPrice.Text;
-                dr["Subprice"] = txtSubPrice.Text;
+                dr["Subprice"] = Convert.ToDecimal(dr["Qty"]) * Convert.ToDecimal(dr["Perprice"]);
                 dataTable.Rows.Add(dr);
 
                 ItemSalesGridView.DataSource = dataTable;
@@ -131,13 +147,13 @@ namespace CoffeeShop.Item
             //decimal Total = _ItemSalesRepository.SumOrdere(serial);
             //txtSubTotal.Text = Convert.ToDecimal(Total).ToString();
 
-            decimal SubTotal = 0;
-            foreach (GridViewRow row in ItemSalesGridView.Rows)
-            {
+            //decimal SubTotal = 0;
+            //foreach (GridViewRow row in ItemSalesGridView.Rows)
+            //{
 
-                SubTotal = SubTotal + Convert.ToDecimal(row.Cells[4].Text); //Where Cells is the column. Just changed the index of cells
-            }
-            txtSubTotal.Text = SubTotal.ToString();
+            //    SubTotal = SubTotal + Convert.ToDecimal(row.Cells[4].Text); //Where Cells is the column. Just changed the index of cells
+            //}
+            //txtSubTotal.Text = SubTotal.ToString();
 
         }
         public void DiscountCalculation()
@@ -1015,14 +1031,16 @@ namespace CoffeeShop.Item
                 dataTable.Rows[e.RowIndex].Delete();
 
                 ViewState["Details"] = dataTable;
-                GridviewRowSum();
+                
 
                 ItemSalesGridView.DataSource = dataTable;
                 ItemSalesGridView.DataBind();
+
+                GridviewRowSum();
             }
             else
             {
-                //Response.Redirect(Request.Url.AbsoluteUri);
+                Response.Redirect(Request.Url.AbsoluteUri);
             }
 
         }
@@ -1036,6 +1054,7 @@ namespace CoffeeShop.Item
 
         protected void ItemSalesGridView_RowEditing(object sender, GridViewEditEventArgs e)
         {
+
             //Change the gridview to edit mode
             ItemSalesGridView.EditIndex = e.NewEditIndex;
 
@@ -1046,18 +1065,21 @@ namespace CoffeeShop.Item
 
         protected void ItemSalesGridView_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
+
             //Findout the controls inside the gridview
-            txtQty.Text = ItemSalesGridView.Rows[e.RowIndex].Cells[2].Text;
-            txtSubPrice.Text = ItemSalesGridView.Rows[e.RowIndex].Cells[3].Text;
+            TextBox txtQty = (TextBox)ItemSalesGridView.Rows[e.RowIndex].Cells[2].FindControl("txtEQty");
+            TextBox txtUnit = (TextBox)ItemSalesGridView.Rows[e.RowIndex].Cells[3].FindControl("txtEUnit");
+            TextBox txtTotal = (TextBox)ItemSalesGridView.Rows[e.RowIndex].Cells[4].FindControl("txtETotal");
+            //TextBox txtUnit = (TextBox)ItemSalesGridView.Rows[e.RowIndex].Cells[3].FindControl("txtEDOB");
 
             //Assign the ViewState to the datatable
             DataRow dr = ((DataTable)ViewState["Details"]).Rows[e.RowIndex];
 
             dr.BeginEdit();
 
-            dr["Qty"] = Convert.ToInt32(txtQty.Text);
-            dr["Perprice"] = Convert.ToDecimal(txtSubPrice.Text);
-            dr["Subprice"] = Convert.ToDecimal(txtSubPrice.Text);
+            dr["Qty"] = txtQty.Text;
+            dr["Perprice"] = txtUnit.Text;
+            dr["Subprice"] = Convert.ToDecimal(dr["Qty"]) * Convert.ToDecimal(dr["Perprice"]);
 
             dr.EndEdit();
 
