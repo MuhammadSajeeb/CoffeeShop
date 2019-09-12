@@ -21,6 +21,8 @@ namespace CoffeeShop.Item
         DataTable dataTable = new DataTable();
         ItemSalesRepository _ItemSalesRepository = new ItemSalesRepository();
         MainRepository _MainRepository = new MainRepository();
+
+        decimal total = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -137,23 +139,6 @@ namespace CoffeeShop.Item
                 ItemSalesGridView.DataBind();
             }
             ViewState["Details"] = dataTable;
-
-        }
-        public void GridviewRowSum()
-        {
-            //string serial;
-            //serial = txtSerial.Text;
-
-            //decimal Total = _ItemSalesRepository.SumOrdere(serial);
-            //txtSubTotal.Text = Convert.ToDecimal(Total).ToString();
-
-            //decimal SubTotal = 0;
-            //foreach (GridViewRow row in ItemSalesGridView.Rows)
-            //{
-
-            //    SubTotal = SubTotal + Convert.ToDecimal(row.Cells[4].Text); //Where Cells is the column. Just changed the index of cells
-            //}
-            //txtSubTotal.Text = SubTotal.ToString();
 
         }
         public void DiscountCalculation()
@@ -537,7 +522,7 @@ namespace CoffeeShop.Item
             AddSaleItems();
             txtQty.Text = "";
             txtSubPrice.Text = "";
-            GridviewRowSum();
+            txtSubTotal.Text = total.ToString();
 
         }
 
@@ -1036,12 +1021,10 @@ namespace CoffeeShop.Item
                 ItemSalesGridView.DataSource = dataTable;
                 ItemSalesGridView.DataBind();
 
-                GridviewRowSum();
+                txtSubTotal.Text = total.ToString();
+
             }
-            else
-            {
-                Response.Redirect(Request.Url.AbsoluteUri);
-            }
+ 
 
         }
         protected void ItemSalesGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
@@ -1090,6 +1073,19 @@ namespace CoffeeShop.Item
             //Now bind the datatable to the gridview
             ItemSalesGridView.DataSource = (DataTable)ViewState["Details"];
             ItemSalesGridView.DataBind();
+
+            txtSubTotal.Text = total.ToString();
+        }
+        protected void ItemSalesGridView_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                var lbltotal = e.Row.FindControl("lblTotal") as Label;
+                if (lbltotal != null)
+                {
+                    total += Convert.ToDecimal(lbltotal.Text);
+                }
+            }
         }
         private static Phrase FormatPhrase(string value)
         {
@@ -1107,5 +1103,7 @@ namespace CoffeeShop.Item
         {
             return new Phrase(value, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 11, iTextSharp.text.Font.BOLD));
         }
+        
+
     }
 }
