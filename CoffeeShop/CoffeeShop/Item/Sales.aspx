@@ -39,19 +39,14 @@
                 <asp:TextBox runat="server" ID="txtItemPrice" CssClass="form-control" ReadOnly="true" />
             </div>
             <div class="col-md-2">
-                <asp:Label runat="server" ID="lblSubPrice" AssociatedControlID="txtSubPrice" CssClass="control-label">Total Price</asp:Label>
-                <asp:TextBox runat="server" ID="txtSubPrice" CssClass="form-control" ReadOnly="true" />
+                <asp:Label runat="server" ID="lblQty" AssociatedControlID="txtQty" CssClass="control-label">Quantity</asp:Label>
+                <asp:TextBox runat="server" ID="txtQty" CssClass="form-control" TextMode="Number" AutoPostBack="true" OnTextChanged="txtQty_TextChanged" />
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-2">
-                <asp:Label runat="server" ID="lblQty" AssociatedControlID="txtQty" CssClass="control-label">Quantity</asp:Label>
-                <asp:TextBox runat="server" ID="txtQty" CssClass="form-control" TextMode="Number" AutoPostBack="true" OnTextChanged="txtQty_TextChanged" />
-                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtQty"
-                    CssClass="text-danger" ErrorMessage="The Quantity field is required." />
-            </div>
-            <div class="col-md-offset-1 col-md-3">
+
+            <div class="col-md-offset-4 col-md-3">
                 <br />
                 <asp:Button runat="server" ID="AddButton" Text="Add" CssClass="btn btn-info" OnClick="AddButton_Click" />
                 <asp:Button runat="server" ID="DeleteButton" Text="Check Print" CssClass="btn btn-info" OnClick="DeleteButton_Click" />

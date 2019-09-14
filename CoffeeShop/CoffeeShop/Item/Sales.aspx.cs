@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -35,6 +36,7 @@ namespace CoffeeShop.Item
                     txtDiscount.Text = "0";
                     txtDate.Text = DateTime.Now.ToString("MMMM dd,yyyy");
                     txtCashierName.Text = Session["Admin"].ToString();
+                    txtCustomerName.Focus();
                 }
                 else if (Session["Authorised"] != null)
                 {
@@ -44,6 +46,7 @@ namespace CoffeeShop.Item
                     txtDiscount.Text = "0";
                     txtDate.Text = DateTime.Now.ToString("MMMM dd,yyyy");
                     txtCashierName.Text = Session["Authorised"].ToString();
+                    txtCustomerName.Focus();
                 }
                 else
                 {
@@ -139,6 +142,7 @@ namespace CoffeeShop.Item
                 ItemSalesGridView.DataBind();
             }
             ViewState["Details"] = dataTable;
+            txtQty.Text = "";
 
         }
         public void DiscountCalculation()
@@ -149,7 +153,16 @@ namespace CoffeeShop.Item
             decimal cal = discount / 100;
             decimal discountAmount = cal * subtotal;
             decimal Costamount = subtotal - discountAmount;
-            txtTotalCost.Text = Convert.ToInt32(Costamount).ToString();
+
+            if(txtSubTotal.Text=="0")
+            {
+                txtTotalCost.Text = "00";
+            }
+            else
+            {
+                txtTotalCost.Text = (Costamount).ToString();
+            }
+            
         }
         public void CreatePdf()
         {
@@ -516,13 +529,36 @@ namespace CoffeeShop.Item
             Response.End();
 
         }
+        public void Refresh()
+        {
+            GetALLCategories();
+            AutoCodeGenerate();
+            CategoriesDropDownList.ClearSelection();
+            ItemsDropDownList.ClearSelection();
+            txtCustomerName.Text = "";
+            txtCustomerName.Focus();
+            txtSubTotal.Text = "";
+            txtDiscount.Text = "";
+            txtDiscount.Text = "0";
+            txtTotalCost.Text = "";
+            txtPaidAmount.Text = "";
+            lblChanges.Text = "";
+        }
         protected void AddButton_Click(object sender, EventArgs e)
         {
+            if (txtQty.Text != "")
+            {
+                AddSaleItems();
+                txtQty.Text = "";
+                txtSubTotal.Text = total.ToString();
+                txtQty.Focus();
+                DiscountCalculation();
+            }
+            else
+            {
+                txtQty.Focus();
+            }
 
-            AddSaleItems();
-            txtQty.Text = "";
-            txtSubPrice.Text = "";
-            txtSubTotal.Text = total.ToString();
 
         }
 
@@ -903,6 +939,8 @@ namespace CoffeeShop.Item
                 ItemsDropDownList.DataBind();
                 ItemsDropDownList.Items.Insert(0, new System.Web.UI.WebControls.ListItem("Select Items", "0"));
                 txtItemPrice.Text = "";
+                lblCategories.ForeColor = Color.Black;
+                
             }
             catch
             {
@@ -921,7 +959,7 @@ namespace CoffeeShop.Item
                     txtItemPrice.Text = Convert.ToDecimal(getPrice.Price).ToString();
                     txtQty.Text = "";
                     txtQty.Focus();
-                    txtSubPrice.Text = "";
+                    lblItems.ForeColor = Color.Black;
                 }
             }
             catch
@@ -933,7 +971,29 @@ namespace CoffeeShop.Item
         {
             try
             {
-                txtSubPrice.Text = (decimal.Parse(txtItemPrice.Text) * decimal.Parse(txtQty.Text)).ToString();
+                if (CategoriesDropDownList.SelectedIndex > 0)
+                {
+                    if(ItemsDropDownList.SelectedIndex > 0)
+                    {
+                        AddSaleItems();
+                        txtQty.Text = "";
+                        txtSubTotal.Text = total.ToString();
+                        CategoriesDropDownList.Focus();
+                        DiscountCalculation();
+                    }
+                    else
+                    {
+                        ItemsDropDownList.Focus();
+
+                        lblItems.ForeColor = Color.Red;
+                    }
+
+                }
+                else
+                {
+                    CategoriesDropDownList.Focus();
+                    lblCategories.ForeColor = Color.Red;
+                }
 
             }
             catch
@@ -978,13 +1038,15 @@ namespace CoffeeShop.Item
 
                     //ItemSales Start With foreach
 
-                    foreach (GridViewRow gr in ItemSalesGridView.Rows)
+                    DataTable dt = (DataTable)ViewState["Details"];
+
+                    foreach (DataRow dr in dt.Rows)
                     {
                         ItemSales _ItemSales = new ItemSales();
-                        _ItemSales.Name = (gr.Cells[1].Text);
-                        _ItemSales.Qty = Convert.ToInt32(gr.Cells[2].Text);
-                        _ItemSales.Per_Price = Convert.ToDecimal(gr.Cells[3].Text);
-                        _ItemSales.Sub_Price = Convert.ToDecimal(gr.Cells[4].Text);
+                        _ItemSales.Name = dr["Name"].ToString();
+                        _ItemSales.Qty = Convert.ToInt32(dr["Qty"].ToString());
+                        _ItemSales.Per_Price = Convert.ToDecimal(dr["Perprice"].ToString());
+                        _ItemSales.Sub_Price = Convert.ToDecimal(dr["Subprice"].ToString());
                         _ItemSales.Serial = txtSerial.Text;
 
                         SqlCommand command = new SqlCommand("Insert Into ItemSales(Name,Qty,Per_Price,Sub_Price,Serial,Date) Values ('" + _ItemSales.Name + "','" + _ItemSales.Qty + "','" + _ItemSales.Per_Price + "','" + _ItemSales.Sub_Price + "','" + _ItemSales.Serial + "','" + DateTime.Now.ToShortDateString() + "')", Sqlcon, transaction);
@@ -994,7 +1056,7 @@ namespace CoffeeShop.Item
 
                     transaction.Commit();
                     CreatePdf();
-                    
+                    Refresh();
 
                 }
                 catch
@@ -1022,7 +1084,8 @@ namespace CoffeeShop.Item
                 ItemSalesGridView.DataBind();
 
                 txtSubTotal.Text = total.ToString();
-
+                DiscountCalculation();
+          
             }
  
 
@@ -1075,6 +1138,7 @@ namespace CoffeeShop.Item
             ItemSalesGridView.DataBind();
 
             txtSubTotal.Text = total.ToString();
+            DiscountCalculation();
         }
         protected void ItemSalesGridView_RowDataBound(object sender, GridViewRowEventArgs e)
         {

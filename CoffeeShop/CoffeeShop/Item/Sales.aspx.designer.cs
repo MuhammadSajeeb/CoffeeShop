@@ -148,24 +148,6 @@ namespace CoffeeShop.Item {
         protected global::System.Web.UI.WebControls.TextBox txtItemPrice;
         
         /// <summary>
-        /// lblSubPrice control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSubPrice;
-        
-        /// <summary>
-        /// txtSubPrice control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSubPrice;
-        
-        /// <summary>
         /// lblQty control.
         /// </summary>
         /// <remarks>
