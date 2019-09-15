@@ -37,6 +37,7 @@ namespace CoffeeShop.Item
                     txtDate.Text = DateTime.Now.ToString("MMMM dd,yyyy");
                     txtCashierName.Text = Session["Admin"].ToString();
                     txtCustomerName.Focus();
+                    
                 }
                 else if (Session["Authorised"] != null)
                 {
@@ -164,6 +165,7 @@ namespace CoffeeShop.Item
             }
             
         }
+        string s = "_";
         public void CreatePdf()
         {
 
@@ -544,390 +546,6 @@ namespace CoffeeShop.Item
             txtPaidAmount.Text = "";
             lblChanges.Text = "";
         }
-        protected void AddButton_Click(object sender, EventArgs e)
-        {
-            if (txtQty.Text != "")
-            {
-                AddSaleItems();
-                txtQty.Text = "";
-                txtSubTotal.Text = total.ToString();
-                txtQty.Focus();
-                DiscountCalculation();
-            }
-            else
-            {
-                txtQty.Focus();
-            }
-
-
-        }
-
-        string s = "_";
-        protected void DeleteButton_Click(object sender, EventArgs e)
-        {
-
-            DataTable data = (DataTable)ViewState["Details"];
-            Response.Clear();
-            Response.ContentType = "application/pdf";
-            Response.AddHeader("content-disposition", "attachment;filename=Invoice_" + txtSerial.Text + "" + s + "" + DateTime.Now.ToString() + ".pdf");
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Document document = new Document();
-            document = new Document(PageSize.B6, 20f, 20f, 25f, 0f);//left,right,top,bottom
-            MemoryStream ms = new MemoryStream();
-            PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
-
-            document.Open();
-            float[] titwidth = new float[1] { 200 };
-            PdfPCell cell;
-            PdfPTable dth = new PdfPTable(titwidth);
-            dth.WidthPercentage = 100;
-
-            cell = new PdfPCell(new Phrase("Sajeeb Cofe House", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 12, iTextSharp.text.Font.BOLD)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            //cell.FixedHeight = 20f;
-            dth.AddCell(cell);            
-
-
-            cell = new PdfPCell(new Phrase("Moghbazer,Mirbagh,Shop-02 ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            dth.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase("Your Reciept", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 8, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            dth.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase("Cashier Name : " + txtCashierName.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 0;
-            cell.VerticalAlignment = 0;
-            cell.BorderWidth = 0f;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            dth.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase("Customer Name : " + txtCustomerName.Text + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 0;
-            cell.VerticalAlignment = 0;
-            cell.BorderWidth = 0f;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            dth.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase("Date : " + DateTime.Now.ToString("dd MMMM,yyyy" + " " + "HH : mm : ss : tt ") + " ", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            dth.AddCell(cell);
-
-            document.Add(dth);
-            LineSeparator line = new LineSeparator(0f, 100, null, Element.ALIGN_CENTER, -2);
-            document.Add(line);
-            PdfPTable dtempty = new PdfPTable(1);
-            document.Add(dtempty);
-            // cell.BorderWidth = 0f;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-
-            //int columnsCount = ReportGridView.HeaderRow.Cells.Count;
-            float[] gridtable = new float[4] { 12, 5, 8, 8 };
-            // Create the PDF Table specifying the number of columns
-            PdfPTable pdfTable = new PdfPTable(gridtable);
-            pdfTable.WidthPercentage = 100;
-
-            //header create
-            cell = new PdfPCell(new Phrase("Name", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            cell.Padding = 5;
-            pdfTable.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase("Qty", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            cell.Padding = 5;
-            pdfTable.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase("Price", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            cell.Padding = 5;
-            pdfTable.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase("Total", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            cell.Padding = 5;
-            pdfTable.AddCell(cell);
-
-            PdfPTable dtempty1 = new PdfPTable(1);
-            document.Add(dtempty1);
-
-            foreach (DataRow dr in data.Rows)
-            {
-
-                cell = new PdfPCell(new Phrase(dr["Name"].ToString(), FontFactory.GetFont(FontFactory.TIMES_ROMAN, 8, iTextSharp.text.Font.NORMAL)));
-                cell.HorizontalAlignment = 1;
-                cell.VerticalAlignment = 1;
-                cell.BorderWidth = 0f;
-                cell.Padding = 5;
-                pdfTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(dr["Qty"].ToString(), FontFactory.GetFont(FontFactory.TIMES_ROMAN, 8, iTextSharp.text.Font.NORMAL)));
-                cell.HorizontalAlignment = 1;
-                cell.VerticalAlignment = 1;
-                cell.BorderWidth = 0f;
-                cell.Padding = 5;
-                pdfTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(dr["PerPrice"].ToString(), FontFactory.GetFont(FontFactory.TIMES_ROMAN, 8, iTextSharp.text.Font.NORMAL)));
-                cell.HorizontalAlignment = 1;
-                cell.VerticalAlignment = 1;
-                cell.BorderWidth = 0f;
-                cell.Padding = 5;
-                pdfTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(dr["SubPrice"].ToString(), FontFactory.GetFont(FontFactory.TIMES_ROMAN, 8, iTextSharp.text.Font.NORMAL)));
-                cell.HorizontalAlignment = 1;
-                cell.VerticalAlignment = 1;
-                cell.BorderWidth = 0f;
-                cell.Padding = 5;
-                pdfTable.AddCell(cell);
-            }
-            //foreach (TableCell gridViewHeaderCell in ReportGridView.HeaderRow.Cells)
-            //{
-            //    PdfPCell pdfCell = new PdfPCell(new Phrase(gridViewHeaderCell.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
-            //    pdfCell.HorizontalAlignment = 1;
-            //    pdfCell.VerticalAlignment = 1;
-            //    pdfCell.BorderWidth = 0f;
-            //    pdfCell.Padding = 5;
-            //    pdfTable.AddCell(pdfCell);
-
-            //}
-
-            //foreach (GridViewRow gridViewRow in ReportGridView.Rows)
-            //{
-            //    if (gridViewRow.RowType == DataControlRowType.DataRow)
-            //    {
-            //        // Loop thru each cell in GrdiView data row
-            //        foreach (TableCell gridViewCell in gridViewRow.Cells)
-            //        {
-
-            //            PdfPCell pdfCell = new PdfPCell(new Phrase(gridViewCell.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            //            pdfCell.HorizontalAlignment = 1;
-            //            pdfCell.VerticalAlignment = 1;
-            //            pdfCell.BorderWidth = 0f;
-            //            pdfCell.Padding = 2;
-            //            pdfTable.AddCell(pdfCell);
-            //        }
-            //    }
-            //}
-
-
-
-            LineSeparator line1 = new LineSeparator(0f, 100, null, Element.ALIGN_CENTER, -2);
-
-
-            PdfPTable dtempty2 = new PdfPTable(1);
-            document.Add(dtempty2);
-
-            float[] titwidths = new float[3] { 75, 5, 20 };
-            PdfPTable grnd = new PdfPTable(titwidths);
-            dth.WidthPercentage = 100;
-
-
-            cell = new PdfPCell(new Phrase("Grand Total", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(":", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(txtSubTotal.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            // second row strat
-
-            cell = new PdfPCell(new Phrase("Discount Amount", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(":", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(txtDiscount.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            //third row start
-
-            cell = new PdfPCell(new Phrase("Payable Amount", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(":", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(txtTotalCost.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            //fourth row start
-
-            cell = new PdfPCell(new Phrase("Paid Amount", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(":", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 1;
-            cell.VerticalAlignment = 1;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(txtPaidAmount.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-
-            //five row start
-
-            cell = new PdfPCell(new Phrase("Changes Amount", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(":", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            cell = new PdfPCell(new Phrase(lblChanges.Text, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.NORMAL)));
-            cell.HorizontalAlignment = 2;
-            cell.VerticalAlignment = 2;
-            cell.BorderWidth = 0f;
-            cell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            grnd.AddCell(cell);
-
-            //empty table for blank space
-            PdfPTable dtempty3 = new PdfPTable(1);
-            document.Add(dtempty3);
-
-            //new table create
-            float[] footer = new float[1] { 200 };
-            PdfPCell fcell;
-            PdfPTable ft = new PdfPTable(footer);
-            ft.WidthPercentage = 100;
-
-            fcell = new PdfPCell(new Phrase("------- Thank You -------", FontFactory.GetFont(FontFactory.TIMES_ROMAN, 9, iTextSharp.text.Font.BOLD)));
-            fcell.HorizontalAlignment = 1;
-            fcell.VerticalAlignment = 1;
-            fcell.BorderWidth = 0f;
-            fcell.Padding = 3;
-            //cell.BorderColor = BaseColor.LIGHT_GRAY;
-            //cell.FixedHeight = 20f;
-            ft.AddCell(fcell);
-
-            cell.FixedHeight = 10f;
-            dtempty.AddCell(cell);
-            document.Add(dtempty);
-            document.Add(pdfTable);
-            dtempty1.AddCell(cell);
-            document.Add(dtempty1);
-            document.Add(line1);
-            dtempty2.AddCell(cell);
-            document.Add(dtempty2);
-            document.Add(grnd);
-            dtempty3.AddCell(cell);
-            document.Add(dtempty3);
-            document.Add(ft);
-
-            document.Close();
-            Response.Flush();
-            Response.End();
-        }
-
         protected void CategoriesDropDownList_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -1013,7 +631,7 @@ namespace CoffeeShop.Item
             DiscountCalculation();
         }
 
-        protected void PrintButton_Click(object sender, EventArgs e)
+        protected void SaveButton_Click(object sender, EventArgs e)
         {
             SqlTransaction transaction = null;
             var sql = _MainRepository.ConnectionString();
@@ -1055,7 +673,8 @@ namespace CoffeeShop.Item
                     }
 
                     transaction.Commit();
-                    CreatePdf();
+                    Response.Redirect(Request.Url.AbsoluteUri);
+                    //CreatePdf();
                     
                 }
                 catch
@@ -1067,10 +686,13 @@ namespace CoffeeShop.Item
                     Sqlcon.Close();
                 }
             }
-            Response.Redirect(Request.Url.AbsoluteUri);
+            
 
         }
-
+        protected void PrintButton_Click(object sender, EventArgs e)
+        {
+            CreatePdf();
+        }
         protected void ItemSalesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             dataTable = (DataTable)ViewState["Details"];
@@ -1168,7 +790,5 @@ namespace CoffeeShop.Item
         {
             return new Phrase(value, FontFactory.GetFont(FontFactory.TIMES_ROMAN, 11, iTextSharp.text.Font.BOLD));
         }
-        
-
     }
 }
