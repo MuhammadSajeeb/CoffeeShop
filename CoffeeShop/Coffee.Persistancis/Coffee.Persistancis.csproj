@@ -47,6 +47,7 @@
     <Compile Include="Repositories\ItemRepository.cs" />
     <Compile Include="Repositories\ItemSalesRepository.cs" />
     <Compile Include="Repositories\MainRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coffee.Core\Coffee.Core.csproj">

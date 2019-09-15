@@ -90,7 +90,7 @@
                         <h4>All Of Sale Amount</h4>
                     </div>
                     <div class="text-warning text-center mt-2">
-                        <h1>346</h1>
+                        <h1>20000</h1>
                     </div>
                 </div>
             </div>

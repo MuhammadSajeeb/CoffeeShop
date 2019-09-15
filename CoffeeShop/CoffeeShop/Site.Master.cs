@@ -20,11 +20,14 @@ namespace CoffeeShop
                     lnProduct.Visible = true;
                     lnItemSales.Visible = true;
                     lnLogout.Visible = true;
+                    lnUser.Visible = true;
+
                 }
                 else if(Session["Authorised"] !=null)
                 {
                     lnAdminName.Visible = false;
                     lnProduct.Visible = false;
+                    lnUser.Visible = false;
                 }
                 else
                 {
@@ -32,6 +35,7 @@ namespace CoffeeShop
                     lnAuthorised.Visible = false;
                     lnProduct.Visible = false;
                     lnItemSales.Visible = false;
+                    lnUser.Visible = false;
                     lnLogout.Visible = false;
                 }
             }

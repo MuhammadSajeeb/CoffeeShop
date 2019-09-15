@@ -1056,8 +1056,7 @@ namespace CoffeeShop.Item
 
                     transaction.Commit();
                     CreatePdf();
-                    Refresh();
-
+                    
                 }
                 catch
                 {
@@ -1068,6 +1067,8 @@ namespace CoffeeShop.Item
                     Sqlcon.Close();
                 }
             }
+            Response.Redirect(Request.Url.AbsoluteUri);
+
         }
 
         protected void ItemSalesGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)

@@ -54,6 +54,7 @@
                         <li><a runat="server" id="lnAuthorised" style="color:red">Welcome! <b><%=Session["Authorised"].ToString()%></b></a></li>
                         <li><a runat="server" id="lnProduct" href="~/Product/Setup">Product Setup</a></li>
                         <li><a runat="server" id="lnItemSales" href="~/Item/Sales">Item Sales</a></li>
+                        <li><a runat="server" id="lnUser" href="~/User/Setup">Users</a></li>
                         <li><a runat="server" id="lnLogout" href="~/Authoriesed/Logout">Logout</a></li>     
                     </ul>
                 </div>

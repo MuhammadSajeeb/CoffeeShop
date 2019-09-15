@@ -144,13 +144,13 @@ namespace CoffeeShop.Product
                 _Categories.Id = Convert.ToInt32(e.CommandArgument);
 
                 int deletesuccess = _CategoriesRepository.Delete(_Categories);
-                if(deletesuccess>0)
+                if (deletesuccess > 0)
                 {
                     LoadCategories();
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ShowMessage(ex.Message, MessageType.Error);
             }

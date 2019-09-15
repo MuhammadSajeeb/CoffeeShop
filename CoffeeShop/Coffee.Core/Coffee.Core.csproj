@@ -47,6 +47,7 @@
     <Compile Include="Models\Categories.cs" />
     <Compile Include="Models\ItemsM.cs" />
     <Compile Include="Models\ItemSales.cs" />
+    <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
